@@ -12,7 +12,7 @@ import constants
 
 def get_graph(ticker, **kwargs):
     if ticker:
-        fp = open('historical_data/{}.csv'.format(ticker), 'r')
+        fp = open('../historical_data/{}.csv'.format(ticker), 'r')
         df = pandas.read_csv(fp)
         x = get_time_series(time_series=df['Date'], days=kwargs.get('days', 30))
         data = df[df['Date'].isin(x)]
@@ -85,7 +85,7 @@ def get_volume_traded_graph(data):
 def get_market_info(ticker, time):
     mp, roi, std, total_vol = -1, -1, -1, -1
     if ticker:
-        fp = open('historical_data/{}.csv'.format(ticker), 'r')
+        fp = open('../historical_data/{}.csv'.format(ticker), 'r')
         df = pandas.read_csv(fp)
         x = get_time_series(time_series=df['Date'], days=time)
         data = df[df['Date'].isin(x)]
@@ -110,7 +110,7 @@ def clean_dataframe(df):
 def combine_all_stock_data(tickers):
     new_df = pd.DataFrame()
     for ticker in tickers:
-        fp = open('historical_data/{}.csv'.format(ticker), 'r')
+        fp = open('../historical_data/{}.csv'.format(ticker), 'r')
         df = pd.read_csv(fp)
         new_df[ticker] = df[['Adj Close']].rolling(100, min_periods=1).mean()
     new_df = clean_dataframe(new_df)
@@ -125,7 +125,7 @@ def get_all_prediction():
     predictions = dict()
     for ticker in constants.TICKERS:
         try:
-            path = 'classifier_models/{}'.format(ticker)
+            path = '../classifier_models/{}'.format(ticker)
             fp = open(path, 'rb')
             model = pickle.load(fp)
             predictions[ticker] = eval(str(model.predict(x)))[0]

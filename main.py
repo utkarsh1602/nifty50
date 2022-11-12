@@ -102,6 +102,6 @@ def save_model(model, ticker):
 
 if __name__ == '__main__':
     new_df = pd.DataFrame()
-    # update_all_stock_data()
+    update_all_stock_data()
     preprocess_data(const.TICKERS)
     create_classifier_model_for_all_stock(const.TICKERS)

@@ -1,11 +1,11 @@
 from dash import Dash
+from dash import Input, Output
 from dash import dcc
 from dash import html
-from dash import Input, Output
 
-import tech_analysis_page, prediction_page
-import constants
 import helper
+import prediction_page
+import tech_analysis_page
 
 app = Dash(__name__)
 
