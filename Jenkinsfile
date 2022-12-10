@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        TARGET_MACHINE = '3.83.116.76'
+        SERVER_IP = '3.83.116.76'
     }
     stages {
         stage('Build') {
