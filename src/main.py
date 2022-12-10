@@ -1,5 +1,5 @@
 from fetch_data import HistoricalData
-import constants as const
+from src import constants as const
 import pandas as pd
 import pickle
 import os

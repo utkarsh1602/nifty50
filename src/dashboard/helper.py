@@ -1,4 +1,3 @@
-import os
 import pickle
 
 import plotly.graph_objects as go
@@ -7,7 +6,7 @@ import pandas
 import datetime
 import pandas as pd
 
-import constants
+from src import constants
 
 
 def get_graph(ticker, **kwargs):

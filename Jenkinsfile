@@ -16,7 +16,8 @@ pipeline {
                     sh '''
                     pwd
                     ls -ltr
-                    sshpass -p "$PASSWD" scp -pr "$(pwd)" ${USER}@${SERVER_IP}:/home/${USER}
+                    sshpass -p "$PASSWD" scp -r src ${USER}@${SERVER_IP}:/home/${USER}/nifty50
+                    sshpass -p "$PASSWD" requirements.txt ${USER}@${SERVER_IP}:/home/${USER}/nifty50
                     sshpass -p "$PASSWD" ssh -tt ${USER}@${SERVER_IP}<<EOF
                     ls -ltr
                     cd nifty50
