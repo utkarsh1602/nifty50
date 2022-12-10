@@ -39,7 +39,7 @@ def buy_sell(*args):
     cols = [c for c in args]
     req = 0.0055
     for col in cols:
-        if col > req:
+        if col > 0.01:
             return 1
         if col < -req:
             return -1
