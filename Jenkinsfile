@@ -16,11 +16,11 @@ pipeline {
                     sh '''
                     pwd
                     ls -ltr
-                    sshpass -p "$PASSWD" scp -r notify_api ${USER}@${SERVER_IP}:/home/${USER}
+                    sshpass -p "$PASSWD" scp -pr "$(pwd)" ${USER}@${SERVER_IP}:/home/${USER}
                     sshpass -p "$PASSWD" ssh -tt ${USER}@${SERVER_IP}<<EOF
                     ls -ltr
-                    cd dashboard
-                    ls
+                    cd nifty50
+                    ls -ltr
                     exit
                     EOF
                 '''
