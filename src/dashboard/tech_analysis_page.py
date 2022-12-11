@@ -1,6 +1,6 @@
 from dash import dcc
 from dash import html
-import constants
+from utils import constants
 import plotly.graph_objects as go
 
 layout = [

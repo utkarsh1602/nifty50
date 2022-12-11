@@ -2,7 +2,7 @@ import datetime
 import time
 import os
 import requests
-from src import constants as const
+import constants as const
 
 
 def set_header():
