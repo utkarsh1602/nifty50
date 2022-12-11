@@ -6,7 +6,7 @@ import pandas
 import datetime
 import pandas as pd
 
-from src import constants
+import constants
 
 
 def get_graph(ticker, **kwargs):
