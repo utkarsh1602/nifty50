@@ -2,20 +2,24 @@ from dash import Dash
 from dash import Input, Output
 from dash import dcc
 from dash import html
+from flask import session
+from flask_sessions import Session
 
 import helper
 import prediction_page
 import tech_analysis_page
 
 app = Dash(__name__)
+app.server.config["SECRET_KEY"] = 'abcd'
+app.server.config["SESSION_PERMANENT"] = False
+app.server.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 app.layout = html.Div(
     id='main-div', children=[
         dcc.Tabs(id='all-tabs', children=[
             dcc.Tab(label='Technical Analysis', value='tab-1'),
-            dcc.Tab(label='Stock Prediction', value='tab-2'),
-            dcc.Tab(label='Correlation Map', value='tab-3'),
-            dcc.Tab(label='Stock News', value='tab-4')
+            dcc.Tab(label='Stock Prediction', value='tab-2')
         ], style={'color': 'Black'}),
         html.Div(id='tab-content')
     ],
@@ -30,7 +34,13 @@ app.layout = html.Div(
 )
 def update_tab(tab):
     if tab == 'tab-1':
-        return tech_analysis_page.layout
+        return tech_analysis_page.get_layout(
+            ticker=session.get('ticker'),
+            graph_type=session.get('graph_type', 1),
+            timeframe=session.get('timeframe', 180),
+            mv_avg=session.get('mv_avg', []),
+            vol=session.get('vol', [])
+        )
     if tab == 'tab-2':
         return prediction_page.layout
 
@@ -49,6 +59,11 @@ def update_chart(*args):
     timeframe = int(args[2])
     mv_avg = args[3]
     vol = args[4][0] if args[4] else False
+    session['ticker'] = ticker
+    session['graph_type'] = graph_type
+    session['timeframe'] = timeframe
+    session['mv_avg'] = mv_avg
+    session['vol'] = args[4]
     graph = helper.get_graph(ticker=ticker, type=graph_type, days=timeframe, mv_avg=mv_avg, vol=vol)
     data = dcc.Graph(figure=graph)
     return [data]
@@ -58,7 +73,6 @@ def update_chart(*args):
     Output(component_id='market-info', component_property='children'),
     Input(component_id='ticker', component_property='value'),
     Input(component_id='time', component_property='value'),
-    prevent_initial_call=True
 )
 def update_info(*args):
     ticker = args[0]
@@ -94,4 +108,4 @@ def update_info(*args):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True, port=8080)
