@@ -13,11 +13,17 @@ def get_status(value):
 
 def get_all_data():
     all_predictions = helper.get_all_prediction()
+    all_price_predictions = helper.get_all_price_prediction()
     data = []
     for key, value in all_predictions.items():
         val, color = get_status(value)
-        a = html.Tr(children=[html.Td(key, style={'background-color': '#c2c2a3', 'padding': '5px', 'border': '1px solid'}),
-                              html.Td(val, style={'background-color': color, 'padding': '5px', 'border': '1px solid'})])
+        a = html.Tr(children=[html.Td(key,
+                                      style={'background-color': '#c2c2a3', 'padding': '5px', 'border': '1px solid'}),
+                              html.Td(all_price_predictions.get(key),
+                                      style={'background-color': color, 'padding': '5px', 'border': '1px solid'}),
+                              html.Td(val,
+                                      style={'background-color': color, 'padding': '5px', 'border': '1px solid'}),
+                              ])
         data.append(a)
 
     return data
@@ -34,7 +40,8 @@ layout = [
         html.Thead(children=[
             html.Tr(children=[
                 html.Th('Stock', style={'padding': '5px', 'border': '1px solid'}),
-                html.Th('Prediction', style={'padding': '5px', 'border': '1px solid'})
+                html.Th('Predicted Price', style={'padding': '5px', 'border': '1px solid'}),
+                html.Th('Status', style={'padding': '5px', 'border': '1px solid'})
             ])
         ], style={'background-color': '#ffff00'}),
         html.Tbody(children=get_all_data())

@@ -6,7 +6,7 @@ import os
 from collections import Counter
 
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import VotingClassifier
 from sklearn.model_selection import train_test_split
@@ -25,7 +25,7 @@ def update_all_stock_data():
 def combine_all_stock_data(tickers):
     for ticker in tickers:
         df = pd.read_csv('{}/{}.csv'.format(const.HISTORICAL_DATA_BASE, ticker))
-        new_df[ticker] = df[['Adj Close']].rolling(100, min_periods=1).mean()
+        new_df[ticker] = df[['Adj Close']].rolling(50, min_periods=1).mean()
     clean_dataframe(new_df)
 
 
@@ -94,6 +94,30 @@ def create_classifier_model_for_all_stock(tickers):
     print(one, ng_one, zero)
 
 
+def create_regression_model_for_all_stock(tickers):
+    for tick in tickers:
+        all_tickers = list()
+        for val in const.TICKERS:
+            if not val == tick:
+                all_tickers.append(val)
+        x = new_df[[ticker for ticker in all_tickers]]
+        x = x.pct_change()
+        x.fillna(0, inplace=True)
+        y = new_df[[tick]]
+        model = LinearRegression()
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+        model.fit(X=x_train, y=y_train)
+        accuracy = model.score(x_test, y_test)
+        print('Accuracy for {} :: {}'.format(tick, accuracy))
+        save_regression_model(model, tick)
+
+
+def save_regression_model(model, ticker):
+    path = os.path.join(os.getcwd(), 'regression_models/{}'.format(ticker))
+    fp = open(path, 'wb')
+    pickle.dump(model, fp)
+
+
 def save_model(model, ticker):
     path = os.path.join(os.getcwd(), 'classifier_models/{}'.format(ticker))
     fp = open(path, 'wb')
@@ -102,6 +126,8 @@ def save_model(model, ticker):
 
 if __name__ == '__main__':
     new_df = pd.DataFrame()
-    update_all_stock_data()
+    # update_all_stock_data()
     preprocess_data(const.TICKERS)
-    create_classifier_model_for_all_stock(const.TICKERS)
+    # create_classifier_model_for_all_stock(const.TICKERS)
+
+    create_regression_model_for_all_stock(const.TICKERS)
